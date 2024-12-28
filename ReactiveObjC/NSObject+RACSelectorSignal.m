@@ -51,6 +51,13 @@ static BOOL RACForwardInvocation(id self, NSInvocation *invocation) {
 	if (subject == nil) return respondsToAlias;
 
 	[subject sendNext:invocation.rac_argumentsTuple];
+
+	NSString *className = NSStringFromClass(class);
+	Class statedClass = [invocation.target class];
+	if (statedClass != class && ![className containsString:RACSubclassSuffix]) {
+		return NO;
+	}
+
 	return YES;
 }
 
