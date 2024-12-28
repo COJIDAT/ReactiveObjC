@@ -53,8 +53,10 @@ static BOOL RACForwardInvocation(id self, NSInvocation *invocation) {
 	[subject sendNext:invocation.rac_argumentsTuple];
 
 	NSString *className = NSStringFromClass(class);
+	NSString *selName = NSStringFromSelector(invocation.selector);
 	Class statedClass = [invocation.target class];
-	if (statedClass != class && ![className containsString:RACSubclassSuffix]) {
+	if (statedClass != class && ![className containsString:RACSubclassSuffix]
+		&& ![selName hasPrefix:RACSignalForSelectorAliasPrefix]) {
 		return NO;
 	}
 
